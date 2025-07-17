@@ -8,6 +8,7 @@ const { validarCampos } = require("../middlewares/validar-campos");
 const { validarJWT } = require("../middlewares/validar-jwt");
 const router = Router();
 
+const { isDate } = require("../helpers/isDate");
 const {
   getEventos,
   crearEvento,
@@ -24,8 +25,8 @@ router.post(
   "/",
   [
     check("title", "El título es obligatorio").not().isEmpty(),
-    check("start", "La fecha de inicio es obligatoria").isDate(),
-    check("end", "La fecha de fin es obligatoria").isDate(),
+    // check("start", "La fecha de inicio es obligatoria").isDate(),
+    // check("end", "La fecha de fin es obligatoria").isDate(),
     check("end", "La fecha de fin debe ser posterior a la de inicio").custom(
       (value, { req }) => {
         const start = new Date(req.body.start);
@@ -46,8 +47,8 @@ router.put(
   "/:id",
   [
     check("title", "El titulo es obligatorio").not().isEmpty(),
-    check("start", "Fecha de inicio es obligatoria").isDate(),
-    check("end", "Fecha de finalización es obligatoria").isDate(),
+    check("start", "Fecha de inicio es obligatoria").custom(isDate),
+    check("end", "Fecha de finalización es obligatoria").custom(isDate),
     validarCampos,
   ],
   actualizarEvento
